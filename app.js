@@ -8,14 +8,22 @@ const cookieParser = require("cookie-parser");
 const open = require("opn");
 const { default: axios } = require("axios");
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
+const keys = require("./web-scraping-441413-d5d264a39732.json");
 
 app.use(cookieParser());
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  "http://localhost:3000/oauth2callback"
-);
+// const oauth2Client = new google.auth.OAuth2(
+//   process.env.CLIENT_ID,
+//   process.env.CLIENT_SECRET,
+//   "http://localhost:3000/oauth2callback"
+// );
+
+const oauth2Client = new google.auth.JWT(
+  keys.client_email,
+  null,
+  keys.private_key,
+  SCOPES
+)
 
 const sheets = google.sheets({ version: "v4", auth: oauth2Client });
 
@@ -111,35 +119,35 @@ const refreshAccessToken = async (req, res) => {
 };
 
 app.get("/oauth2callback", async (req, res) => {
-  let access_token = req.cookies ? req.cookies.access_token : null;
-  if (!access_token) {
-    const tokenRefreshed = await refreshAccessToken(req, res);
-    if (!tokenRefreshed) {
-      const authUrl = oauth2Client.generateAuthUrl({
-        access_type: "offline",
-        scope: SCOPES,
-      });
+  // let access_token = req.cookies ? req.cookies.access_token : null;
+  // if (!access_token) {
+  //   const tokenRefreshed = await refreshAccessToken(req, res);
+  //   if (!tokenRefreshed) {
+  //     const authUrl = oauth2Client.generateAuthUrl({
+  //       access_type: "offline",
+  //       scope: SCOPES,
+  //     });
 
-      console.log("Authorize this app by visiting this url", authUrl);
-      open(authUrl);
-      if (!req.query.code) {
-        return res.status(400).send("Error: Authorization code not found");
-      }
-      const { tokens } = await oauth2Client.getToken(req.query.code);
-      oauth2Client.setCredentials(tokens);
-      console.log("Susscessfully authenticated client");
-      res.cookie("access_token", tokens.access_token, {
-        httpOnly: true,
-        secure: true,
-      });
-      res.cookie("refresh_token", tokens.refresh_token, {
-        httpOnly: true,
-        secure: true,
-      });
-    }
-  } else {
-    oauth2Client.setCredentials({ access_token });
-  }
+  //     console.log("Authorize this app by visiting this url", authUrl);
+  //     open(authUrl);
+  //     if (!req.query.code) {
+  //       return res.status(400).send("Error: Authorization code not found");
+  //     }
+  //     const { tokens } = await oauth2Client.getToken(req.query.code);
+  //     oauth2Client.setCredentials(tokens);
+  //     console.log("Susscessfully authenticated client");
+  //     res.cookie("access_token", tokens.access_token, {
+  //       httpOnly: true,
+  //       secure: true,
+  //     });
+  //     res.cookie("refresh_token", tokens.refresh_token, {
+  //       httpOnly: true,
+  //       secure: true,
+  //     });
+  //   }
+  // } else {
+  //   oauth2Client.setCredentials({ access_token });
+  // }
 
   const authenticate = async (maDoiTac, maTruyenThong, type, url) => {
     try {
