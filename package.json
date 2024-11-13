@@ -1,0 +1,26 @@
+{
+  "name": "web-scraping",
+  "version": "1.0.0",
+  "description": "this is a tool for scraping others website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@googleapis/sheets": "^9.3.1",
+    "axios": "^1.7.7",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "googleapis": "^144.0.0",
+    "nodemon": "^3.1.7",
+    "open": "^10.1.0",
+    "opn": "^6.0.0",
+    "puppeteer": "^23.7.1",
+    "readline-sync": "^1.4.10"
+  }
+}
